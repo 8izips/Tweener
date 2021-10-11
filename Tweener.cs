@@ -26,6 +26,7 @@ public partial class Tweener : MonoBehaviour
         isPlaying = true;
 
         tweenData.Init();
+        tweenData.Reset();
     }
 
     public void Stop()
@@ -53,8 +54,11 @@ public partial class Tweener : MonoBehaviour
                 }
                 break;
             case TweenData.LoopType.Loop:
-                if (curTime >= tweenData.duration)
+                if (curTime >= tweenData.duration) {
                     curTime -= tweenData.duration;
+                    tweenData.Reset();
+                }
+
                 break;
         }
 

@@ -29,6 +29,16 @@ public partial class Tweener : MonoBehaviour
             }
         }
 
+        public void Reset()
+        {
+            if (sequences == null || sequences.Length == 0)
+                return;
+
+            for (int i = 0; i < sequences.Length; i++) {
+                sequences[i].Reset();
+            }
+        }
+
         public void Update(float curTime)
         {
             if (sequences == null || sequences.Length == 0)

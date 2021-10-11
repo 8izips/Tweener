@@ -303,7 +303,7 @@ public partial class TweenerEditor : Editor
     void StartSimulation()
     {
         _instance.tweenData.Init();
-
+        _instance.tweenData.Reset();
         isPlaying = true;
         playtime = 0f;
     }

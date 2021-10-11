@@ -139,6 +139,12 @@ public partial class Tweener : MonoBehaviour
             }
         }
 
+        float lastRate;
+        public void Reset()
+        {
+            lastRate = 0f;
+        }
+
         public void Update(float curTime)
         {
             if (endTime == 0f || (object)targets == null || targets.Length == 0)
@@ -208,6 +214,7 @@ public partial class Tweener : MonoBehaviour
         {
             if (rate < 0f)
                 return;
+            lastRate = rate;
 
             switch (moduleType) {
                 case ModuleType.TransformPosition:
@@ -326,10 +333,10 @@ public partial class Tweener : MonoBehaviour
 
         float Evaluate(float curTime)
         {
-            if (curTime < startTime)
+            if (curTime < startTime || lastRate >= 1f)
                 return -1f;
             if (curTime > endTime)
-                return -1f;
+                return 1f;
 
             var progress = (curTime - startTime);
             var duration = (endTime - startTime);
