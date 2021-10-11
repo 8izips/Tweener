@@ -18,3 +18,11 @@ This helps controlling animations via inspector without animator.
 + Multi channel animations
 + Ease function previews
 + All animations datas are serialized (saved in scene or prefab)
+
+## quick start
++ add Tweener component
++ set duration
++ add sequence and select module type
++ add target Transform or RectTransform, Image, etc..
+
+or See Sample scene for reference
