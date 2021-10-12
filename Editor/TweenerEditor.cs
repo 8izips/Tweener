@@ -94,7 +94,17 @@ public partial class TweenerEditor : Editor
         _instance.ignoreTimeScale = EditorGUILayout.Toggle("Ignore TimeScale", _instance.ignoreTimeScale);
 
         var data = _instance.tweenData;
-        data.duration = EditorGUILayout.FloatField("Duration", data.duration);
+        var duration = EditorGUILayout.FloatField("Duration", data.duration);
+        if (duration != data.duration) {
+            data.duration = duration;
+            for (int i = 0; i < _instance.tweenData.sequences.Length; i++) {
+                var sequence = _instance.tweenData.sequences[i];
+                if (sequence.startTime > duration)
+                    sequence.startTime = duration;
+                if (sequence.endTime > duration)
+                    sequence.endTime = duration;
+            }
+        }
         data.loopType = (Tweener.TweenData.LoopType)EditorGUILayout.EnumPopup("Loop Type", data.loopType);
 
         if (isPlaying) {
@@ -290,12 +300,28 @@ public partial class TweenerEditor : Editor
 
         if (isPlaying) {
             playtime += 0.01667f;
-            if (playtime >= _instance.tweenData.duration) {
-                StopSimulation();
+            var applyTime = playtime;
+
+            switch (_instance.tweenData.loopType) {
+                case Tweener.TweenData.LoopType.PlayOnce:
+                case Tweener.TweenData.LoopType.Loop:
+                    if (playtime >= _instance.tweenData.duration) {
+                        StopSimulation();
+                        return;
+                    }
+                    break;
+                case Tweener.TweenData.LoopType.PingPongOnce:
+                case Tweener.TweenData.LoopType.PingPongLoop:
+                    if (playtime >= _instance.tweenData.duration * 2f) {
+                        StopSimulation();
+                        return;
+                    }
+                    else if (playtime >= _instance.tweenData.duration) {
+                        applyTime = _instance.tweenData.duration * 2f - playtime;
+                    }
+                    break;
             }
-            else {
-                _instance.tweenData.Update(playtime);
-            }
+            _instance.tweenData.Update(applyTime);
         }
     }
 
@@ -303,7 +329,6 @@ public partial class TweenerEditor : Editor
     void StartSimulation()
     {
         _instance.tweenData.Init();
-        _instance.tweenData.Reset();
         isPlaying = true;
         playtime = 0f;
     }

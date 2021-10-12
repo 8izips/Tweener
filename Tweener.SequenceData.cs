@@ -139,12 +139,6 @@ public partial class Tweener : MonoBehaviour
             }
         }
 
-        float lastRate;
-        public void Reset()
-        {
-            lastRate = 0f;
-        }
-
         public void Update(float curTime)
         {
             if (endTime == 0f || (object)targets == null || targets.Length == 0)
@@ -154,12 +148,12 @@ public partial class Tweener : MonoBehaviour
             ApplyProgress(rate);
         }
 
-        public void End()
+        public void End(bool isPingpong)
         {
             if (endTime == 0f || (object)targets == null || targets.Length == 0)
                 return;
 
-            ApplyProgress(1f);
+            ApplyProgress(isPingpong ? 0f : 1f);
         }
 
         public void Restore()
@@ -214,7 +208,6 @@ public partial class Tweener : MonoBehaviour
         {
             if (rate < 0f)
                 return;
-            lastRate = rate;
 
             switch (moduleType) {
                 case ModuleType.TransformPosition:
@@ -333,8 +326,10 @@ public partial class Tweener : MonoBehaviour
 
         float Evaluate(float curTime)
         {
-            if (curTime < startTime || lastRate >= 1f)
+            if (curTime < startTime)
                 return -1f;
+            if (curTime == 0f)
+                return 0f;
             if (curTime > endTime)
                 return 1f;
 

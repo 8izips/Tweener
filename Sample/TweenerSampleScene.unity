@@ -546,7 +546,7 @@ MonoBehaviour:
       endAlpha: 0
       beginEnable: 0
       endEnable: 0
-      easeType: 18
+      easeType: 6
       targets:
       - {fileID: 1018292094}
 --- !u!4 &498853731

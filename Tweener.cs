@@ -26,7 +26,6 @@ public partial class Tweener : MonoBehaviour
         isPlaying = true;
 
         tweenData.Init();
-        tweenData.Reset();
     }
 
     public void Stop()
@@ -43,25 +42,46 @@ public partial class Tweener : MonoBehaviour
             curTime += Time.unscaledDeltaTime;
         else
             curTime += Time.deltaTime;
+        var playTime = curTime;
 
         switch (tweenData.loopType) {
             case TweenData.LoopType.PlayOnce:
                 if (curTime >= tweenData.duration) {
-                    tweenData.End();
+                    tweenData.End(false);
                     isPlaying = false;
 
                     completionCallback?.Invoke();
+                    return;
                 }
                 break;
             case TweenData.LoopType.Loop:
                 if (curTime >= tweenData.duration) {
                     curTime -= tweenData.duration;
-                    tweenData.Reset();
                 }
+                break;
+            case TweenData.LoopType.PingPongOnce:
+                if (curTime >= tweenData.duration * 2f) {
+                    tweenData.End(true);
+                    isPlaying = false;
 
+                    completionCallback?.Invoke();
+                    return;
+                }
+                else if (curTime >= tweenData.duration) {
+                    playTime = tweenData.duration * 2f - curTime;
+                }
+                break;
+            case TweenData.LoopType.PingPongLoop:
+                if (curTime >= tweenData.duration * 2f) {
+                    curTime -= tweenData.duration * 2f;
+                    playTime = curTime;
+                }
+                else if (curTime >= tweenData.duration) {
+                    playTime = tweenData.duration * 2f - curTime;
+                }
                 break;
         }
 
-        tweenData.Update(curTime);
+        tweenData.Update(playTime);
     }
 }
