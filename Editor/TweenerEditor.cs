@@ -71,6 +71,25 @@ public partial class TweenerEditor : Editor
 
             rect.x += rectWidth;
         };
+        sequences.onAddCallback = list => {
+            _sequenceProperty.arraySize++;
+            var newIndex = _sequenceProperty.arraySize - 1;
+            var newElement = _sequenceProperty.GetArrayElementAtIndex(newIndex);
+
+            // new sequence initialization
+            var moduleType = newElement.FindPropertyRelative("moduleType");
+            moduleType.enumValueIndex = (int)Tweener.ModuleType.TransformPosition;
+
+            var endTime = newElement.FindPropertyRelative("endTime");
+            endTime.floatValue = _instance.tweenData.duration;
+
+            var targetsProperty = newElement.FindPropertyRelative("targets");
+            if (targetsProperty.arraySize == 0) {
+                targetsProperty.arraySize++;
+                var targets = targetsProperty.GetArrayElementAtIndex(0);
+                targets.objectReferenceValue = _instance.gameObject;
+            }
+        };
 
         EditorApplication.update += UpdateMethod;
     }
@@ -164,7 +183,7 @@ public partial class TweenerEditor : Editor
     {
         if (_instance.tweenData.sequences == null || _instance.tweenData.sequences.Length == 0)
             return;
-        if (sequences.index == -1 || sequences.index >= _instance.tweenData.sequences.Length)
+        if (sequences.index == -1 || sequences.count <= 0 || sequences.index >= _instance.tweenData.sequences.Length)
             return;
 
         var sequence = _instance.tweenData.sequences[sequences.index];
@@ -193,7 +212,7 @@ public partial class TweenerEditor : Editor
         switch (sequence.moduleType) {
             case Tweener.ModuleType.GameObjectEnable:
                 sequence.beginEnable = EditorGUILayout.Toggle("Begin Enable", sequence.beginEnable);
-                sequence.endEnable = EditorGUILayout.Toggle("Begin Enable", sequence.endEnable);
+                sequence.endEnable = EditorGUILayout.Toggle("End Enable", sequence.endEnable);
                 break;
             case Tweener.ModuleType.TransformPosition:
             case Tweener.ModuleType.TransformRotation:

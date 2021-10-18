@@ -7,7 +7,7 @@ public partial class Tweener : MonoBehaviour
     [System.Serializable]
     public class TweenData
     {
-        public float duration;
+        public float duration = 1f;
 
         public enum LoopType
         {
