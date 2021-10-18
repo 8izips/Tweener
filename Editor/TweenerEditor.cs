@@ -113,25 +113,34 @@ public partial class TweenerEditor : Editor
 
         EditorGUILayout.Space();
 
+        EditorGUILayout.BeginHorizontal();
         if (!Application.isPlaying) {
-            EditorGUILayout.BeginHorizontal();
-
             if (!isPlaying) {
-                if (GUILayout.Button("Play", GUILayout.Width(50))) {
+                if (GUILayout.Button("Play", GUILayout.Width(50)))
                     StartSimulation();
-                }
             }
             else {
-                if (GUILayout.Button("Stop", GUILayout.Width(50))) {
+                if (GUILayout.Button("Stop", GUILayout.Width(50)))
                     StopSimulation();
-                }
             }
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.Slider(playtime, 0f, _instance.tweenData.duration);
-            EditorGUI.EndDisabledGroup();
-
-            EditorGUILayout.EndHorizontal();
         }
+        else {
+            if (!_instance.isPlaying) {
+                if (GUILayout.Button("Play", GUILayout.Width(50)))
+                    _instance.Play();
+            }
+            else {
+                if (GUILayout.Button("Stop", GUILayout.Width(50)))
+                    _instance.Stop();
+            }
+        }
+        EditorGUI.BeginDisabledGroup(true);
+        if (!Application.isPlaying)
+            EditorGUILayout.Slider(playtime, 0f, _instance.tweenData.duration);
+        else
+            EditorGUILayout.Slider(_instance.curTime, 0f, _instance.tweenData.duration);
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space();
 
@@ -329,6 +338,8 @@ public partial class TweenerEditor : Editor
     void StartSimulation()
     {
         _instance.tweenData.Init();
+        _instance.tweenData.Update(0f);
+
         isPlaying = true;
         playtime = 0f;
     }
