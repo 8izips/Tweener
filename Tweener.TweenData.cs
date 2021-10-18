@@ -24,8 +24,10 @@ public partial class Tweener : MonoBehaviour
         public void Init()
         {
             if (sequences != null && sequences.Length != 0) {
-                for (int i = 0; i < sequences.Length; i++)
+                for (int i = 0; i < sequences.Length; i++) {
                     sequences[i].Init();
+                    sequences[i].Update(0f);
+                }
             }
         }
 
