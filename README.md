@@ -5,7 +5,7 @@ This helps controlling animations via inspector without animator.
 
 https://user-images.githubusercontent.com/7134183/188277448-e14f426e-b977-4325-8415-5e5f55e8b704.mp4
 
-![Tweener](https://github.com/8izips/Tweener/blob/screenshot/tweener.png)
+![image](https://user-images.githubusercontent.com/7134183/188280339-806fbe09-f521-4f49-ba85-51530bdb937f.png)
 
 ## supported functions by target object type 
 
