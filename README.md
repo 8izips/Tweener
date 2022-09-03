@@ -3,7 +3,7 @@ Tweener is a simple tween component for Unity.
 
 This helps controlling animations via inspector without animator.
 
-[![alt設定](http://img.youtube.com/vi/DLflBrMg8gE/0.jpg)](https://www.youtube.com/watch?v=DLflBrMg8gE)
+https://user-images.githubusercontent.com/7134183/188277448-e14f426e-b977-4325-8415-5e5f55e8b704.mp4
 
 ![Tweener](https://github.com/8izips/Tweener/blob/screenshot/tweener.png)
 
