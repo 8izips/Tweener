@@ -1,87 +1,209 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public partial class Tweener : MonoBehaviour
 {
-    public bool playOnAwake;
-    public bool ignoreTimeScale;
-    public float curTime;
-    public bool isPlaying;
+	public int playerId;
 
-    [SerializeField]
-    public TweenData tweenData;
+	public float speed = 1f;
+	public float duration = 2f;
+	public bool looping = false;
+	public float startDelay;
+	public bool randomStartDelay;
 
-    public System.Action completionCallback;
+	public bool ignoreTimeScale = false;
+	public bool playOnAwake = true;
 
-    void Awake()
-    {
-        if (playOnAwake)
-            Play();
-    }
+	[SerializeReference]
+	public SequenceModule[] sequences;
 
-    public void Play()
-    {
-        curTime = 0f;
-        isPlaying = true;
+	public bool isPlaying { get; private set; } = false;
+	public bool isPaused { get; private set; } = false;
+	public float curTime { get; set; }
+	public float waitTime { get; set; }
+	private void OnEnable()
+	{
+		if (!IsValidData())
+			return;
 
-        tweenData.Init();
-    }
+		for (int i = 0; i < sequences.Length; i++) {
+			var sequence = sequences[i];
+			if (sequence == null || !sequence.isEnable)
+				continue;
+			sequence.InitModule();
+		}
 
-    public void Stop()
-    {
-        isPlaying = false;
-    }
+		if (playOnAwake)
+			Play();
+	}
 
-    public void Update()
-    {
-        if (!isPlaying || (object)tweenData == null)
-            return;
+	private void OnDisable()
+	{
+		if (isPlaying)
+			Stop();
+	}
 
-        if (ignoreTimeScale)
-            curTime += Time.unscaledDeltaTime;
-        else
-            curTime += Time.deltaTime;
-        var playTime = curTime;
+	bool IsValidData()
+	{
+		if (sequences == null || sequences.Length == 0)
+			return false;
+		return true;
+	}
 
-        switch (tweenData.loopType) {
-            case TweenData.LoopType.PlayOnce:
-                if (curTime >= tweenData.duration) {
-                    tweenData.End(false);
-                    isPlaying = false;
+	bool IsValidParameter()
+	{
+		if (duration <= 0f || speed <= 0f)
+			return false;
+		return true;
+	}
 
-                    completionCallback?.Invoke();
-                    return;
-                }
-                break;
-            case TweenData.LoopType.Loop:
-                if (curTime >= tweenData.duration) {
-                    curTime -= tweenData.duration;
-                }
-                break;
-            case TweenData.LoopType.PingPongOnce:
-                if (curTime >= tweenData.duration * 2f) {
-                    tweenData.End(true);
-                    isPlaying = false;
+	public void Play()
+	{
+		if (!IsValidData() || !IsValidParameter())
+			return;
 
-                    completionCallback?.Invoke();
-                    return;
-                }
-                else if (curTime >= tweenData.duration) {
-                    playTime = tweenData.duration * 2f - curTime;
-                }
-                break;
-            case TweenData.LoopType.PingPongLoop:
-                if (curTime >= tweenData.duration * 2f) {
-                    curTime -= tweenData.duration * 2f;
-                    playTime = curTime;
-                }
-                else if (curTime >= tweenData.duration) {
-                    playTime = tweenData.duration * 2f - curTime;
-                }
-                break;
-        }
+		isPlaying = true;
+		isPaused = false;
+		curTime = 0f;
+		waitTime = randomStartDelay ? Random.Range(0f, startDelay) : startDelay;
 
-        tweenData.Update(playTime);
-    }
+		ResetSequences();
+	}
+
+	public void PlayDelayed(float delay)
+	{
+		if (!IsValidData() || !IsValidParameter())
+			return;
+
+		isPlaying = true;
+		isPaused = false;
+		curTime = 0f;
+		waitTime = delay;
+
+		ResetSequences();
+	}
+
+	public void Stop()
+	{
+		isPlaying = false;
+		isPaused = false;
+	}
+
+	public void Pause()
+	{
+		isPaused = true;
+	}
+
+	public void Resume()
+	{
+		if (curTime < duration)
+			isPaused = false;
+	}
+
+	public void Evaluate(float targetTime)
+	{
+		if (!IsValidData())
+			return;
+		curTime = Mathf.Clamp(targetTime, 0f, duration);
+		waitTime = 0f;
+		UpdateSequences(curTime);
+	}
+
+	public void Rewind()
+	{
+		if (!IsValidData())
+			return;
+
+		isPlaying = false;
+		isPaused = false;
+		curTime = 0f;
+		waitTime = 0f;
+		
+		for (int i = 0; i < sequences.Length; i++) {
+			var sequence = sequences[i];
+			if (sequence == null || !sequence.isEnable)
+				continue;
+
+			sequence.ResetModule();
+		}
+	}
+
+	public void Complete()
+	{
+		if (!IsValidData())
+			return;
+		isPlaying = false;
+		isPaused = false;
+		curTime = duration;
+		waitTime = 0f;
+		for (int i = 0; i < sequences.Length; i++) {
+			var sequence = sequences[i];
+			if (sequence == null || !sequence.isEnable)
+				continue;
+			sequence.cachedEvaluate(curTime);
+		}
+	}
+
+	void Update()
+	{
+		if (!isPlaying || isPaused)
+			return;
+
+		var dt = ignoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
+
+		// start delay
+		if (waitTime > 0f) {
+			waitTime -= dt;
+			if (waitTime > 0f)
+				return;
+
+			dt = -waitTime;
+			waitTime = 0f;
+		}	
+
+		curTime += speed * dt;		
+		if (curTime >= duration) {
+			if (looping) {
+				curTime %= duration;
+				ResetSequences();
+			}
+			else {
+				curTime = duration;
+				isPlaying = false;
+			}
+		}
+
+		UpdateSequences(curTime);
+	}
+
+	void ResetSequences()
+	{
+		if (!IsValidData())
+			return;
+
+		for (int i = 0; i < sequences.Length; i++) {
+			var sequence = sequences[i];
+			if (sequence == null || !sequence.isEnable)
+				continue;
+
+			sequence.ResetModule();
+			sequence.Init();
+		}
+	}
+
+	void UpdateSequences(float targetTime)
+	{
+		if (!IsValidData())
+			return;
+
+		for (int i = 0; i < sequences.Length; i++) {
+			var sequence = sequences[i];
+			if (sequence == null || !sequence.isEnable)
+				continue;
+
+			sequence.cachedEvaluate(targetTime);
+		}
+	}
 }
