@@ -1,30 +1,26 @@
 # Tweener
-Tweener is a simple tween component for Unity.
 
-This helps controlling animations via inspector without animator.
+Tweener is a lightweight Unity tween / sequence system.
 
-https://user-images.githubusercontent.com/7134183/188277448-e14f426e-b977-4325-8415-5e5f55e8b704.mp4
+This repository now uses the new module-based architecture.
 
-![image](https://user-images.githubusercontent.com/7134183/188280339-806fbe09-f521-4f49-ba85-51530bdb937f.png)
+## Structure
 
-## supported functions by target object type 
+- `Tweener.cs` — runtime playback and timeline control
+- `SequenceModule.cs` — base contract for sequence modules
+- `Tweener.EaseFunctions.cs` — easing LUTs and easing functions
+- `Tweener.Modules.cs` — module discovery / factory
+- `DefaultModules/` — built-in modules
+- `CustomModules/` — project-specific modules
+- `Editor/` — custom inspector and preview
 
-+ GameObject: enable
-+ Transform: translation, rotation, scale
-+ RectTransform: translation, rotation, scale
-+ Image: color, alpha
+## Built-in modules
 
-## features
+- CanvasGroup Alpha
+- GameObject Enable
+- RectTransform Move / Rotate / Scale
+- Transform Move / Rotate / Scale
 
-+ Preview play in edit mode
-+ Multi channel animations
-+ Ease function previews
-+ All animations datas are serialized (saved in scene or prefab)
+## License
 
-## quick start
-+ add Tweener component
-+ set duration
-+ add sequence and select module type
-+ add target Transform or RectTransform, Image, etc..
-
-or See Sample scene for reference
+See `LICENSE`.
