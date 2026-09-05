@@ -124,10 +124,9 @@ DefaultModules/
 
 CustomModules/
 Editor/
-Sample/
 ```
 
 ## Requirements
 
-- Unity
-- C# scripting runtime supporting `SerializeReference`
+- Unity 2019.3 or later
+- Uses Unity's `SerializeReference` managed-reference serialization for polymorphic sequence modules
