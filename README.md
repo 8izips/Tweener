@@ -129,4 +129,4 @@ Editor/
 ## Requirements
 
 - Unity 2019.3 or later
-- Uses Unity's `SerializeReference` managed-reference serialization for polymorphic sequence modules
+- Uses Unity's `SerializeReference` managed-reference serialization for polymorphic sequence modules\n- TextMeshPro package (required by TextColor / TextSize)
