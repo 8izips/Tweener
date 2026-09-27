@@ -119,16 +119,22 @@ Tweener.Modules.cs
 SequenceModule.cs
 
 DefaultModules/
-    TransformMove.cs
-    TransformRotate.cs
-    TransformScale.cs
-    RectTransformMove.cs
-    RectTransformRotate.cs
-    RectTransformScale.cs
-    CanvasGroupAlpha.cs
-    GameObjectEnable.cs
-    TextColor.cs
-    TextSize.cs
+    Transform/
+        TransformMove.cs
+        TransformRotate.cs
+        TransformScale.cs
+    RectTransform/
+        RectTransformMove.cs
+        RectTransformRotate.cs
+        RectTransformScale.cs
+    Text/
+        TextColor.cs
+        TextSize.cs
+    GameObject/
+        GameObjectEnable.cs
+    UI/
+        CanvasGroup/
+            CanvasGroupAlpha.cs
 
 CustomModules/
 Editor/
