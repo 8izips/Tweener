@@ -123,16 +123,16 @@ DefaultModules/
         TransformMove.cs
         TransformRotate.cs
         TransformScale.cs
-    RectTransform/
-        RectTransformMove.cs
-        RectTransformRotate.cs
-        RectTransformScale.cs
-    Text/
-        TextColor.cs
-        TextSize.cs
     GameObject/
         GameObjectEnable.cs
     UI/
+        RectTransform/
+            RectTransformMove.cs
+            RectTransformRotate.cs
+            RectTransformScale.cs
+        Text/
+            TextColor.cs
+            TextSize.cs
         CanvasGroup/
             CanvasGroupAlpha.cs
 
