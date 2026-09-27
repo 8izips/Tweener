@@ -14,6 +14,7 @@ It is designed around a small runtime, a simple module architecture, and an edit
 - Relative and absolute transform animation
 - Local and world-space transform animation
 - One-shot modules for non-duration actions
+- Unity UI Text and TextMeshPro support
 - Extensible module architecture through `SequenceModule`
 
 ## Built-in Modules
@@ -29,6 +30,11 @@ It is designed around a small runtime, a simple module architecture, and an edit
 - Move
 - Rotate
 - Scale
+
+### Text
+
+- Color — supports Unity UI Text and TextMeshPro
+- Size — supports Unity UI Text and TextMeshPro
 
 ### Other
 
@@ -121,6 +127,8 @@ DefaultModules/
     RectTransformScale.cs
     CanvasGroupAlpha.cs
     GameObjectEnable.cs
+    TextColor.cs
+    TextSize.cs
 
 CustomModules/
 Editor/
@@ -129,4 +137,5 @@ Editor/
 ## Requirements
 
 - Unity 2019.3 or later
-- Uses Unity's `SerializeReference` managed-reference serialization for polymorphic sequence modules\n- TextMeshPro package (required by TextColor / TextSize)
+- Uses Unity's `SerializeReference` managed-reference serialization for polymorphic sequence modules
+- TextMeshPro package (required by TextColor / TextSize)
