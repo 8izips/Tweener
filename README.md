@@ -30,11 +30,26 @@ It is designed around a small runtime, a simple module architecture, and an edit
 - Move
 - Rotate
 - Scale
+- Size
 
 ### Text
 
 - Color — supports Unity UI Text and TextMeshPro
 - Size — supports Unity UI Text and TextMeshPro
+
+### Image
+
+- Color
+
+### SpriteRenderer
+
+- Color
+
+### Material
+
+- Color
+- Float — shader property name is converted to an ID during initialization
+- Vector4 — shader property name is converted to an ID during initialization
 
 ### Other
 
@@ -130,11 +145,20 @@ DefaultModules/
             RectTransformMove.cs
             RectTransformRotate.cs
             RectTransformScale.cs
+            RectTransformSize.cs
         Text/
             TextColor.cs
             TextSize.cs
+        Image/
+            ImageColor.cs
         CanvasGroup/
             CanvasGroupAlpha.cs
+    SpriteRenderer/
+        SpriteColor.cs
+    Material/
+        MaterialColor.cs
+        MaterialFloat.cs
+        MaterialVector4.cs
 
 CustomModules/
 Editor/
