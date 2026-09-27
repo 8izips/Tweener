@@ -1,5 +1,7 @@
 # Tweener
 
+<img src="Documentation/Images/ui-preview.png" width="422" alt="Tweener UI Preview">
+
 Tweener is a lightweight tween / sequence system for Unity.
 
 It is designed around a small runtime, a simple module architecture, and an editor workflow that keeps sequence setup easy to inspect and preview.
